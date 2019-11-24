@@ -16,6 +16,21 @@ from . import constants
 from . import envs
 from . import characters
 
+def one_vs_one_bare_env():
+    """Start up an OneVsOneBare config with the default settings."""
+    env = envs.v0.Pomme
+    game_type = constants.GameType.OneVsOneBare
+    env_entry_point = 'pommerman.envs.v0:Pomme'
+    env_id = 'OneVsOneBare-v0'
+    env_kwargs = {
+        'game_type': game_type,
+        'board_size': constants.BOARD_SIZE_ONE_VS_ONE_BARE,
+        'max_steps': constants.MAX_STEPS,
+        'render_fps': constants.RENDER_FPS,
+        'env': env_entry_point,
+    }
+    agent = characters.Bomber
+    return locals()
 
 def one_vs_one_env():
     """Start up an OneVsOne config with the default settings."""

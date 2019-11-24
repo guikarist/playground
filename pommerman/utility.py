@@ -36,6 +36,21 @@ class PommermanJSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
+def make_bare_board(size):
+    def make(_size):
+        _board = np.ones((_size, _size)).astype(np.uint8) * constants.Item.Passage.value
+        _board[0, 0] = constants.Item.Agent0.value
+        _board[_size - 1, _size - 1] = constants.Item.Agent1.value
+
+        _agents = [(0, 0), (_size - 1, _size - 1)]
+
+        return _board, _agents
+
+    board, agents = make(size)
+
+    return board
+
+
 def make_board(size, num_rigid=0, num_wood=0, num_agents=4):
     """Make the random but symmetric board.
 

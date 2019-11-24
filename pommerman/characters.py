@@ -11,7 +11,10 @@ class Bomber(object):
 
     def __init__(self, agent_id=None, game_type=None):
         self._game_type = game_type
-        self.ammo = 1
+        if game_type == constants.GameType.OneVsOneBare:
+            self.ammo = 2
+        else:
+            self.ammo = 1
         self.is_alive = True
         self.blast_strength = constants.DEFAULT_BLAST_STRENGTH
         self.can_kick = False
@@ -27,7 +30,7 @@ class Bomber(object):
                 for id_ in range(4)
                 if id_ != agent_id
             ]
-        elif self._game_type == constants.GameType.OneVsOne:
+        elif self._game_type == constants.GameType.OneVsOne or self._game_type == constants.GameType.OneVsOneBare:
             self.teammate = constants.Item.AgentDummy
             self.enemies = [
                 getattr(constants.Item, 'Agent%d' % id_)
@@ -76,7 +79,10 @@ class Bomber(object):
 
     def reset(self, ammo=1, is_alive=True, blast_strength=None, can_kick=False):
         self.position = self.start_position
-        self.ammo = ammo
+        if self._game_type == constants.GameType.OneVsOneBare:
+            self.ammo = 2
+        else:
+            self.ammo = ammo
         self.is_alive = is_alive
         self.blast_strength = blast_strength or constants.DEFAULT_BLAST_STRENGTH
         self.can_kick = can_kick

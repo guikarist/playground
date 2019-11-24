@@ -335,7 +335,7 @@ class PommeViewer(Viewer):
         title_label = pyglet.text.Label(
             'Pommerman',
             font_name='Cousine-Regular',
-            font_size=36,
+            font_size=16 if self._game_type == constants.GameType.OneVsOneBare else 36,
             x=constants.BORDER_SIZE,
             y=board_top,
             batch=self._batch,
@@ -344,7 +344,7 @@ class PommeViewer(Viewer):
         text.append(title_label)
 
         info_text = ''
-        if self._game_type is not None:
+        if self._game_type is not None and self._game_type is not constants.GameType.OneVsOneBare:
             info_text += 'Mode: ' + self._game_type.name + '   '
 
         info_text += 'Time: ' + strftime('%b %d, %Y %H:%M:%S')
@@ -364,14 +364,15 @@ class PommeViewer(Viewer):
 
     def render_dead_alive(self):
         board_top = self.board_top(y_offset=5)
-        image_size = 30
+        image_size = 24 if self._game_type == constants.GameType.OneVsOneBare else 30
         spacing = 5
         dead = self._resource_manager.dead_marker()
         dead.width = image_size
         dead.height = image_size
         sprites = []
-        
-        if self._game_type is constants.GameType.FFA or self._game_type is constants.GameType.OneVsOne:
+
+        if self._game_type is constants.GameType.FFA or self._game_type is constants.GameType.OneVsOne \
+                or self._game_type is constants.GameType.OneVsOneBare:
             agents = self._agents
         else:
             agents = [self._agents[i] for i in [0,2,1,3]]
@@ -429,7 +430,8 @@ class ResourceManager(object):
         self._fog_value = self._get_fog_index_value()
         self._is_team = True
 
-        if game_type == constants.GameType.FFA or game_type == constants.GameType.OneVsOne:
+        if game_type == constants.GameType.FFA or game_type == constants.GameType.OneVsOne \
+                or game_type == constants.GameType.OneVsOneBare:
             self._is_team = False
 
     @staticmethod

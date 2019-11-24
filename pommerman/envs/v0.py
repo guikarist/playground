@@ -86,11 +86,11 @@ class Pomme(gym.Env):
         - teammate (one of {AgentDummy.value, Agent3.value}).
         - enemies (three of {AgentDummy.value, Agent3.value}).
         """
-        bss = self._board_size**2
+        bss = self._board_size ** 2
         min_obs = [0] * 3 * bss + [0] * 5 + [constants.Item.AgentDummy.value
-                                            ] * 4
+                                             ] * 4
         max_obs = [len(constants.Item)] * bss + [self._board_size
-                                                ] * bss + [25] * bss
+                                                 ] * bss + [25] * bss
         max_obs += [self._board_size] * 2 + [self._num_items] * 2 + [1]
         max_obs += [constants.Item.Agent3.value] * 4
         self.observation_space = spaces.Box(
@@ -123,6 +123,9 @@ class Pomme(gym.Env):
         if game_state_file:
             with open(game_state_file, 'r') as f:
                 self._init_game_state = json.loads(f.read())
+
+    def make_bare_board(self):
+        self._board = utility.make_bare_board(self._board_size,)
 
     def make_board(self):
         self._board = utility.make_board(self._board_size, self._num_rigid,
@@ -164,8 +167,12 @@ class Pomme(gym.Env):
             self.set_json_info()
         else:
             self._step_count = 0
-            self.make_board()
-            self.make_items()
+            if self._game_type == constants.GameType.OneVsOneBare:
+                self.make_bare_board()
+                self._items = {}
+            else:
+                self.make_board()
+                self.make_items()
             self._bombs = []
             self._flames = []
             self._powerups = []
@@ -195,7 +202,7 @@ class Pomme(gym.Env):
             self._flames,
             max_blast_strength=max_blast_strength)
         self._board, self._agents, self._bombs, self._items, self._flames = \
-                                                                    result[:5]
+            result[:5]
 
         done = self._get_done()
         obs = self.get_observations()
@@ -283,7 +290,7 @@ class Pomme(gym.Env):
     def featurize(obs):
         board = obs["board"].reshape(-1).astype(np.float32)
         bomb_blast_strength = obs["bomb_blast_strength"].reshape(-1) \
-                                                        .astype(np.float32)
+            .astype(np.float32)
         bomb_life = obs["bomb_life"].reshape(-1).astype(np.float32)
         position = utility.make_np_float(obs["position"])
         ammo = utility.make_np_float([obs["ammo"]])
