@@ -6,7 +6,6 @@ Display object. Pyglet only supports multiple Displays on Linux.
 from datetime import datetime
 import math
 import os
-from random import randint
 from time import strftime
 
 from gym.utils import reraise
@@ -26,8 +25,6 @@ try:
     LAYER_BACKGROUND = pyglet.graphics.OrderedGroup(0)
     LAYER_FOREGROUND = pyglet.graphics.OrderedGroup(1)
     LAYER_TOP = pyglet.graphics.OrderedGroup(2)
-except pyglet.canvas.xlib.NoSuchDisplayException as error:
-    print("Import error NSDE! You will not be able to render --> %s" % error)
 except ImportError as error:
     print("Import error GL! You will not be able to render --> %s" % error)
 
