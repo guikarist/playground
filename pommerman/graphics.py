@@ -26,7 +26,7 @@ try:
     LAYER_FOREGROUND = pyglet.graphics.OrderedGroup(1)
     LAYER_TOP = pyglet.graphics.OrderedGroup(2)
 except ImportError as error:
-    print("Import error GL! You will not be able to render --> %s" % error)
+    pass
 
 from . import constants
 from . import utility
